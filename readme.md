@@ -1,4 +1,4 @@
-# OLAF/Neighbourhood protocol v0.3
+# OLAF/Neighbourhood protocol v0.4
 By James, Jack, Tom, Mia, Valen, Isabelle, Katie & Cubie
 
 # WARNING: THIS IS NOT A COMPLETE SPECIFICATION YET! DO NOT IMPLEMENT!
@@ -187,4 +187,18 @@ If not all servers agree on who is in the neighbourhood, the neighbourhood enter
 ## Underlying technologies
 The transport layer uses Websockets, meaning the server will need to be HTTP-capable. There are various websocket libraries for the popular programming languages that will handle this.
 
-The encryption standards in use are 2048-bit standard RSA (e=65537) and 128-bit standard AES. The best library to use for this is OpenSSL/libcrypto.
+## Encryption
+### Asymmetric Encryption
+Asymmetric encryption and decryption is performed with RSA and the OAEP padding scheme.
+- Key size/Modulus length (n) = 2048 bits
+- Public exponent (e) = 65537
+- Padding scheme: OAEP with SHA-256 digest/hash function
+
+Signing and verification uses the same RSA keys as encryption
+- Padding scheme: PSS with SHA-256 digest/hash function
+- Salt length: 32 bytes
+
+Symmetric encryption is performed with AES in GCM mode.
+- Initialisation vector (IV) = 16 bytes (Must be randomly generated)
+- Additional/associated data = not used (empty).
+- Key length: 32 bytes (128 bits)
