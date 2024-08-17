@@ -55,9 +55,11 @@ The hash used for `signature` follows the SHA-256 algorithm.
 #### Hello
 This message is sent when first connecting to a server to establish your public key.
 ```JSON
-data: {
-    "type": "hello",
-    "public_key": "<Exported RSA public key>"
+{
+    "data": {
+        "type": "hello",
+        "public_key": "<Exported RSA public key>"
+    }
 }
 ```
 
@@ -65,19 +67,23 @@ data: {
 Sent when a user wants to send a chat message to another user[s]. Chat messages are end-to-end encrypted.
 
 ```JSON
-data: {
-    "type": "chat",
-    "destination_server": "<Address of destination server>",
-    "iv": "<Base64 encoded AES initialisation vector>",
-    "symm_key": "<Base64 encoded AES key, encrypted with recipient's public RSA key>",
-    "chat": "<Base64 encoded AES encrypted segment>"
+{
+    "data": {
+        "type": "chat",
+        "destination_server": "<Address of destination server>",
+        "iv": "<Base64 encoded AES initialisation vector>",
+        "symm_key": "<Base64 encoded AES key, encrypted with recipient's public RSA key>",
+        "chat": "<Base64 encoded AES encrypted segment>"
+    }
 }
 
-chat: {
-    "participants": [
-        "<Base64 encoded list of fingerprints of participants, starting with sender>",
-    ],
-    "message": "<Plaintext message>"
+{
+    "chat": {
+        "participants": [
+            "<Base64 encoded list of fingerprints of participants, starting with sender>",
+        ],
+        "message": "<Plaintext message>"
+    }
 }
 ```
 
@@ -87,10 +93,12 @@ Group chats are defined similar to how group emails work. Simply send a message 
 Public chats are not encrypted at all and are broadcasted as plaintext.
 
 ```JSON
-data: {
-    "type": "public_chat",
-    "sender": "<Base64 encoded fingerprint of sender>",
-    "message": "<Plaintext message>"
+{
+    "data": {
+        "type": "public_chat",
+        "sender": "<Base64 encoded fingerprint of sender>",
+        "message": "<Plaintext message>"
+    }
 }
 ```
 
@@ -98,12 +106,12 @@ data: {
 To retrieve a list of all currently connected clients on all servers. Your server will send a JSON response. This does not follow the `data` structure.
 
 ```JSON
-// Client request:
 {
     "type": "client_list_request",
 }
-
-// Server response:
+```
+Server response:
+```JSON
 {
     "type": "client_list",
     "servers": [
