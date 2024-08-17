@@ -43,21 +43,21 @@ Messages include a counter and are signed to prevent replay attacks.
 All below messages with `data` follow the below structure:
 ```JSON
 {
-    type: "signed_data",
-    data: { ... },
-    counter: <64-bit integer counter>,
-    signature: "<Base64 signature of data + counter>"
+    "type": "signed_data",
+    "data": {  },
+    "counter": 12345,
+    "signature": "<Base64 signature of data + counter>"
 }
 ```
-`counter` is a monotonically increasing counter. All handlers of a message should track the last counter value sent by a client and reject it if the current value is not greater than the last value. This defeats replay attacks.
+`counter` is a monotonically increasing integer. All handlers of a message should track the last counter value sent by a client and reject it if the current value is not greater than the last value. This defeats replay attacks.
 The hash used for `signature` follows the SHA-256 algorithm.
 
 #### Hello
 This message is sent when first connecting to a server to establish your public key.
 ```JSON
 data: {
-    type: "hello",
-    public_key: "<Exported RSA public key>"
+    "type": "hello",
+    "public_key": "<Exported RSA public key>"
 }
 ```
 
@@ -66,19 +66,18 @@ Sent when a user wants to send a chat message to another user[s]. Chat messages 
 
 ```JSON
 data: {
-    type: "chat",
-    destination_server: "<Address of destination server>",
-    iv: "<Base64 encoded AES initialisation vector>",
-    symm_key: "<Base64 encoded AES key, encrypted with recipient's public RSA key>",
-    chat: "<Base64 encoded AES encrypted segment>"
+    "type": "chat",
+    "destination_server": "<Address of destination server>",
+    "iv": "<Base64 encoded AES initialisation vector>",
+    "symm_key": "<Base64 encoded AES key, encrypted with recipient's public RSA key>",
+    "chat": "<Base64 encoded AES encrypted segment>"
 }
 
 chat: {
-    participants: [
+    "participants": [
         "<Base64 encoded list of fingerprints of participants, starting with sender>",
-        ...
     ],
-    message: "<Plaintext message>"
+    "message": "<Plaintext message>"
 }
 ```
 
@@ -89,9 +88,9 @@ Public chats are not encrypted at all and are broadcasted as plaintext.
 
 ```JSON
 data: {
-    type: "public_chat",
-    sender: "<Base64 encoded fingerprint of sender>",
-    message: "<Plaintext message>"
+    "type": "public_chat",
+    "sender": "<Base64 encoded fingerprint of sender>",
+    "message": "<Plaintext message>"
 }
 ```
 
@@ -101,21 +100,19 @@ To retrieve a list of all currently connected clients on all servers. Your serve
 ```JSON
 // Client request:
 {
-    type: "client_list_request",
+    "type": "client_list_request",
 }
 
 // Server response:
 {
-    type: "client_list",
-    servers: [
+    "type": "client_list",
+    "servers": [
         {
-            address: "<Address of server>",
-            clients: [
+            "address": "<Address of server>",
+            "clients": [
                 "<Exported RSA public key of client>",
-                ...
             ]
         },
-        ...
     ]
 }
 ```
@@ -133,10 +130,9 @@ You don't need to send an update for clients who disconnected before sending `he
 The `client_update` advertises all currently connected users on a particular server.
 ```JSON
 {
-    type: "client_update",
-    clients: [
+    "type": "client_update",
+    "clients": [
         "<Exported RSA public key of client>",
-        ...
     ]
 }
 ```
@@ -146,19 +142,17 @@ When a server comes online, it will have no initial knowledge of clients connect
 
 ```JSON
 {
-    type: "client_update_request"
+    "type": "client_update_request"
 }
-
-// All other servers respond by sending client_update
 ```
-
+All other servers respond by sending `client_update`
 
 ## File transfers
 File transfers are performed over an HTTP[S] API.
 
 ### Upload file
 Uplaod a file in the same format as an HTTP form.
-```JSON
+```
 "<server>/api/upload" {
     METHOD: POST
     body: file
@@ -167,7 +161,7 @@ Uplaod a file in the same format as an HTTP form.
 The server makes no guarantees that it will accept your file or retain it for any given length of time. It can also reject the file based on an arbitrary file size limit. An appropriate `413` error can be returned for this case.
 
 A successful file upload will result in the following response:
-```JSON
+```
 response {
     body: {
         file_url: "<...>"
@@ -177,7 +171,7 @@ response {
 `file_url` is a unique URL that points to the uploaded file which can be retrieved later.
 
 ### Retrieve file
-```JSON
+```
 "<file_url>" {
     METHOD: GET
 }
