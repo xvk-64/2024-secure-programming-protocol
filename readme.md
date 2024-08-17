@@ -1,12 +1,13 @@
-# OLAF/Neighbourhood protocol v0.4
+# OLAF/Neighbourhood protocol v0.5
 By James, Jack, Tom, Mia, Valen, Isabelle, Katie & Cubie
 
 # WARNING: THIS IS NOT A COMPLETE SPECIFICATION YET! DO NOT IMPLEMENT!
 
 ## Definitions
-- **User** A user has a key pair. They are uniquely identified by the public key. Each user connects to one server at a time.
+- **User** A user has a key pair. Each user connects to one server at a time.
 - **Server** A server receives messages from clients and relays them towards the destination.
 - **Neighbourhood** Servers organise themselves in a meshed network called a neighborhood. Each server in a neighbourhood is aware of and connects to all other servers
+- **Fingerprint** A fingerprint is the unique identification of a user. It is obtained by taking SHA-256(exported RSA public key)
 
 ## Main design principles
 This protocol specification was obtained by taking parts of the original OLAF protocol combined with the neighbourhood protocol. The network structure resembles the original neighbourhood, while the messages and roles of the servers are similar to OLAF.
@@ -42,21 +43,21 @@ Messages include a counter and are signed to prevent replay attacks.
 All below messages with `data` follow the below structure:
 ```JSON
 {
-    type: "data_container",
+    type: "signed_data",
     data: { ... },
     counter: <64-bit integer counter>,
-    signature: "<Base64 signed hash of data concatenated with counter>"
+    signature: "<Base64 signature of data + counter>"
 }
 ```
 `counter` is a monotonically increasing counter. All handlers of a message should track the last counter value sent by a client and reject it if the current value is not greater than the last value. This defeats replay attacks.
-The hash used for `signature` follows the SHA256 algorithm.
+The hash used for `signature` follows the SHA-256 algorithm.
 
 #### Hello
 This message is sent when first connecting to a server to establish your public key.
 ```JSON
 data: {
     type: "hello",
-    public_key: "<Base64 encoded RSA public key>"
+    public_key: "<Exported RSA public key>"
 }
 ```
 
@@ -67,19 +68,21 @@ Sent when a user wants to send a chat message to another user[s]. Chat messages 
 data: {
     type: "chat",
     destination_server: "<Address of destination server>",
-    symm_key: "<Base64 encoded AES symmetric key, encrypted with recipient's public RSA key>",
+    iv: "<Base64 encoded AES initialisation vector>",
+    symm_key: "<Base64 encoded AES key, encrypted with recipient's public RSA key>",
     chat: "<Base64 encoded AES encrypted segment>"
 }
 
 chat: {
     participants: [
-        "<Base64 encoded list of public keys of participants, starting with sender>"
+        "<Base64 encoded list of fingerprints of participants, starting with sender>",
+        ...
     ],
     message: "<Plaintext message>"
 }
 ```
 
-Group chats are defined similar to how group emails work. Simply send a message to all recipients with multiple `participants`. You will need to specifically encrypt the `key` for each recipient though.
+Group chats are defined similar to how group emails work. Simply send a message to all recipients with multiple `participants`. Be aware that each recipient will expect the asymmetric encryption to match their own keys, so you have to encrypt and send the message multiple times.
 
 ### Public chat
 Public chats are not encrypted at all and are broadcasted as plaintext.
@@ -87,7 +90,7 @@ Public chats are not encrypted at all and are broadcasted as plaintext.
 ```JSON
 data: {
     type: "public_chat",
-    public_key: "<Base64 encoded public key of sender>",
+    sender: "<Base64 encoded fingerprint of sender>",
     message: "<Plaintext message>"
 }
 ```
@@ -98,7 +101,7 @@ To retrieve a list of all currently connected clients on all servers. Your serve
 ```JSON
 // Client request:
 {
-    type: "client_list",
+    type: "client_list_request",
 }
 
 // Server response:
@@ -108,7 +111,7 @@ To retrieve a list of all currently connected clients on all servers. Your serve
         {
             address: "<Address of server>",
             clients: [
-                "<Base64 encoded public key of client>",
+                "<Exported RSA public key of client>",
                 ...
             ]
         },
@@ -132,7 +135,7 @@ The `client_update` advertises all currently connected users on a particular ser
 {
     type: "client_update",
     clients: [
-        "<Base64 encoded public key of client>",
+        "<Exported RSA public key of client>",
         ...
     ]
 }
@@ -151,7 +154,35 @@ When a server comes online, it will have no initial knowledge of clients connect
 
 
 ## File transfers
-TBD but will be submitted/downloaded from a server over HTTP.
+File transfers are performed over an HTTP[S] API.
+
+### Upload file
+Uplaod a file in the same format as an HTTP form.
+```JSON
+"<server>/api/upload" {
+    METHOD: POST
+    body: file
+}
+```
+The server makes no guarantees that it will accept your file or retain it for any given length of time. It can also reject the file based on an arbitrary file size limit. An appropriate `413` error can be returned for this case.
+
+A successful file upload will result in the following response:
+```JSON
+response {
+    body: {
+        file_url: "<...>"
+    }
+}
+```
+`file_url` is a unique URL that points to the uploaded file which can be retrieved later.
+
+### Retrieve file
+```JSON
+"<file_url>" {
+    METHOD: GET
+}
+```
+The server will respond with the file data. File uploads and downloads are not authenticated and secured only by keeping the unique URL secret.
 
 
 ## Client Responsibilities
@@ -189,12 +220,13 @@ The transport layer uses Websockets, meaning the server will need to be HTTP-cap
 
 ## Encryption
 ### Asymmetric Encryption
-Asymmetric encryption and decryption is performed with RSA and the OAEP padding scheme.
+Asymmetric encryption and decryption is performed with RSA.
 - Key size/Modulus length (n) = 2048 bits
 - Public exponent (e) = 65537
 - Padding scheme: OAEP with SHA-256 digest/hash function
+- Public keys are exported in PEM encoding with PKCS8 format.
 
-Signing and verification uses the same RSA keys as encryption
+Signing and verification also uses RSA. It shares the same keys as encryption/decryption.
 - Padding scheme: PSS with SHA-256 digest/hash function
 - Salt length: 32 bytes
 
