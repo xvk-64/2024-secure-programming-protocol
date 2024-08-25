@@ -70,10 +70,12 @@ Sent when a user wants to send a chat message to another user[s]. Chat messages 
 {
     "data": {
         "type": "chat",
-        "destination_server": "<Address of destination server>",
+        "destination_servers": [
+            "<Address of each recipient's destination server>",
+        ],
         "iv": "<Base64 encoded AES initialisation vector>",
-        "symm_key": [
-            "<Base64 encoded AES key, encrypted with recipient's public RSA key>",
+        "symm_keys": [
+            "<Base64 encoded AES key, encrypted with each recipient's public RSA key>",
         ],
         "chat": "<Base64 encoded AES encrypted segment>"
     }
@@ -89,7 +91,7 @@ Sent when a user wants to send a chat message to another user[s]. Chat messages 
 }
 ```
 
-Group chats are defined similar to how group emails work. Simply send a message to all recipients with multiple `participants`. 
+Group chats are defined similar to how group emails work. Simply send a message to all recipients with multiple `participants`. The `symm_keys` field is an array which lists the AES key for the message encrypted for each recipient using their respective asymmetric key. Each of the `destination_servers`, `symm_keys`, and `participants` are in the same order, except for the sender, which is only included in the `participants` list.
 
 ### Public chat
 Public chats are not encrypted at all and are broadcasted as plaintext.
