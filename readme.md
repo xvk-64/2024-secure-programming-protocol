@@ -231,6 +231,7 @@ Asymmetric encryption and decryption is performed with RSA.
 - Public exponent (e) = 65537
 - Padding scheme: OAEP with SHA-256 digest/hash function
 - Public keys are exported in PEM encoding with PKCS8 format.
+- Note: Swapping of asymmetric public keys is done externally of the protocol
 
 Signing and verification also uses RSA. It shares the same keys as encryption/decryption.
 - Padding scheme: PSS with SHA-256 digest/hash function
