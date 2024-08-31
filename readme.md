@@ -72,32 +72,32 @@ If you are ClientA you can message any Client with the yellow rectangle. ClientA
 ```mermaid
 graph LR;
 subgraph connections
-A[ClientA] --> B((Server1));
-C[ClientB] --> B;
+A[ClientA] -.-> B((Server1));
+C[ClientB] -.-> B;
 B <--> D((Server2));
-E[ClientC] --> D;
+E[ClientC] -.-> D;
 end
 D <--> F((Server3));
-G[ClientD] --> F;
-H[ClientE] --> F;
+G[ClientD] -.-> F;
+H[ClientE] -.-> F;
 D <--> I((Server4));
-J[ClientF] --> I;
-K[ClientG] --> I;
+J[ClientF] -.-> I;
+K[ClientG] -.-> I;
 ```
 If you are Client C, you can message anyone with the yellow rectangle. This is becuase the clientC's homeServer Server 2 is directly connected to all the other servers in this neighbourhood. 
 ```mermaid
 graph LR;
 subgraph connections
-A[ClientA] --> B((Server1));
-C[ClientB] --> B;
+A[ClientA] -.-> B((Server1));
+C[ClientB] -.-> B;
 B <--> D((Server2));
-E[ClientC] --> D;
+E[ClientC] -.-> D;
 D <--> F((Server3));
-G[ClientD] --> F;
-H[ClientE] --> F;
+G[ClientD] -.-> F;
+H[ClientE] -.-> F;
 D <--> I((Server4));
-J[ClientF] --> I;
-K[ClientG] --> I;
+J[ClientF] -.-> I;
+K[ClientG] -.-> I;
 end
 ```
 If you are ClientER you can message any Client with the yellow rectangle. ClientE can message ClientD becuase they are on the server and can message ClientC, becuase their home servers have a direct connection.
@@ -105,18 +105,18 @@ If you are ClientER you can message any Client with the yellow rectangle. Client
 ```mermaid
 graph LR;
 
-A[ClientA] --> B((Server1));
-C[ClientB] --> B;
+A[ClientA] -.-> B((Server1));
+C[ClientB] -.-> B;
 B <--> D((Server2));
 subgraph connections
-E[ClientC] --> D;
+E[ClientC] -.-> D;
 D <--> F((Server3));
-G[ClientD] --> F;
-H[ClientE] --> F;
+G[ClientD] -.-> F;
+H[ClientE] -.-> F;
 end
 D <--> I((Server4));
-J[ClientF] --> I;
-K[ClientG] --> I;
+J[ClientF] -.-> I;
+K[ClientG] -.-> I;
 
 ```
 
