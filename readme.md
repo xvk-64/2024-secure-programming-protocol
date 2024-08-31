@@ -240,3 +240,11 @@ Symmetric encryption is performed with AES in GCM mode.
 - Initialisation vector (IV) = 16 bytes (Must be randomly generated)
 - Additional/associated data = not used (empty).
 - Key length: 32 bytes (128 bits)
+
+### Order to apply different layers of encrpytion  
+- message is created
+- create a signature by applying the signature scheme RSA-PSS 
+- encrpyt the message using the symmetric encyption specified above
+- encrypt the symmetric key used to encrypt the message with the public asymmetric encrption key of the intended recipient
+- format these to be sent as shown in proctocol defined messages
+
