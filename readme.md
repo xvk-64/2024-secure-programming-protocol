@@ -33,6 +33,39 @@ Client (Receiver)
 If a server "owns" a client, that just means that the client is connected to that server (Since clients only connect to one server at a time). The transport layer of this protocol uses Websockets (RFC 6455). You can consider the server you are connected to your homeserver. You can only connect to users connected to your home server or users on servers directly connected your home server.
 To this illustrate consider these the diagrams below:
 
+This is an example of a simple neighboorhood, you can be able to commicate with everyone in becuase you are all directly connected.
+
+```mermaid
+graph LR;
+subgraph connections
+A[ClientA] -.-> B((Server1));
+C[ClientB] -.-> B;
+B <--> D((Server2));
+E[ClientC] -.-> D;
+end
+```
+This is an example of a more complex neighboorhood. Again all clients can talk to other clients beucase they either share the same homeServer or are connected to servers directly connected to your homeServer.
+
+```mermaid
+graph LR;
+subgraph connections
+A[ClientA] -.-> B((Server1));
+C[ClientB] -.-> B;
+B <--> D((Server2));
+E[ClientC] -.-> D;
+D <--> F((Server3));
+G[ClientD] -.-> F;
+H[ClientE] -.-> F;
+D <--> I((Server4));
+J[ClientF] -.-> I;
+K[ClientG] -.-> I;
+B <--> F;
+B <--> I;
+F <--> I;
+end
+```
+The following three diagrams explain who you would be able to talk to in a situation, where servers connected and didn't properly form a neighbourhood.
+
 If you are ClientA you can message any Client with the yellow rectangle. ClientA can message ClientB becuase they are on the server and can message ClientC, becuase their home servers have a direct connection. 
 ```mermaid
 graph LR;
