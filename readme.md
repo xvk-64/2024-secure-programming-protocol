@@ -35,7 +35,7 @@ If a server "owns" a client, that just means that the client is connected to tha
 You can call the server you are connected to your homeserver. You can only connect to users connected to your home server or users on servers directly connected your home server.
 To this illustrate consider these the diagrams below:
 
-This is an example of a simple neighboorhood, you can be able to commicate with everyone in becuase you are all directly connected.
+This is an example of a simple neighboorhood, you are able to communicate with everyone in the graph, in becuase you are all directly connected.
 
 ```mermaid
 graph LR;
@@ -68,7 +68,7 @@ end
 ```
 The following three diagrams explain who you would be able to talk to in a situation, where servers connected and didn't properly form a neighbourhood.
 
-If you are ClientA you can message any Client with the yellow rectangle. ClientA can message ClientB becuase they are on the server and can message ClientC, becuase their home servers have a direct connection. 
+If you are ClientA you can message any Client within the yellow rectangle. ClientA can message ClientB becuase they are on the same server and can message ClientC, becuase their home servers have a direct connection. 
 ```mermaid
 graph LR;
 subgraph connections
@@ -84,7 +84,7 @@ D <--> I((Server4));
 J[ClientF] -.-> I;
 K[ClientG] -.-> I;
 ```
-If you are Client C, you can message anyone with the yellow rectangle. This is becuase the clientC's homeServer Server 2 is directly connected to all the other servers in this neighbourhood. 
+If you are ClientC, you can message anyone within the yellow rectangle. This is becuase the clientC's homeServer, Server2, is directly connected to all the other servers in this neighbourhood. 
 ```mermaid
 graph LR;
 subgraph connections
@@ -100,7 +100,7 @@ J[ClientF] -.-> I;
 K[ClientG] -.-> I;
 end
 ```
-If you are ClientER you can message any Client with the yellow rectangle. ClientE can message ClientD becuase they are on the server and can message ClientC, becuase their home servers have a direct connection.
+If you are ClientE you can message any client within the yellow rectangle. ClientE can message ClientD becuase they are on same the server and can message ClientC, becuase their home servers have a direct connection.
 
 ```mermaid
 graph LR;
