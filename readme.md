@@ -31,7 +31,7 @@ Client (Receiver)
 ```
 
 If a server "owns" a client, that just means that the client is connected to that server (Since clients only connect to one server at a time). The transport layer of this protocol uses Websockets (RFC 6455). You can consider the server you are connected to your homeserver. You can only connect to users connected to your home server or users on servers directly connected your home server.
-To illustrate consider these the diagrams below:
+To this illustrate consider these the diagrams below:
 
 If you are ClientA you can message any Client with the yellow rectangle. ClientA can message ClientB becuase they are on the server and can message ClientC, becuase their home servers have a direct connection. 
 ```mermaid
