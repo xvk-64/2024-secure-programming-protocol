@@ -231,7 +231,6 @@ Asymmetric encryption and decryption is performed with RSA.
 - Public exponent (e) = 65537
 - Padding scheme: OAEP with SHA-256 digest/hash function
 - Public keys are exported in PEM encoding with PKCS8 format.
-- Note: Swapping of asymmetric public keys is done externally of the protocol
 
 Signing and verification also uses RSA. It shares the same keys as encryption/decryption.
 - Padding scheme: PSS with SHA-256 digest/hash function
@@ -244,7 +243,8 @@ Symmetric encryption is performed with AES in GCM mode.
 
 ### Order to apply different layers of encrpytion  
 - message is created
-- add signature by hashing the message and then encrypting the reuslting hash with your private key 
+- create a signature by applying the signature scheme RSA-PSS 
 - encrpyt the message using the symmetric encyption specified above
-- encrypt the the symmetric key used to encrypt the message with the public asymmetric encrption key for the intended recipient
+- encrypt the symmetric key used to encrypt the message with the public asymmetric encrption key of the intended recipient
+- format these to be sent as shown in proctocol defined messages
 
