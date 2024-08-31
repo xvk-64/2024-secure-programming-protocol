@@ -30,7 +30,61 @@ Server (Owner of the receiver)
 Client (Receiver)
 ```
 
-If a server "owns" a client, that just means that the client is connected to that server (Since clients only connect to one server at a time).
+If a server "owns" a client, that just means that the client is connected to that server (Since clients only connect to one server at a time). You can consider the server you are connected to your homeserver. You can only connect to users connected to your home server or users on servers directly connected your home server.
+To illustrate consider these the diagrams below:
+
+If you are ClientA you can message any Client with the yellow rectangle. ClientA can message ClientB becuase they are on the server and can message ClientC, becuase their home servers have a direct connection. 
+```mermaid
+graph LR;
+subgraph connections
+A[ClientA] --> B((Server1));
+C[ClientB] --> B;
+B <--> D((Server2));
+E[ClientC] --> D;
+end
+D <--> F((Server3));
+G[ClientD] --> F;
+H[ClientE] --> F;
+D <--> I((Server4));
+J[ClientF] --> I;
+K[ClientG] --> I;
+```
+If you are Client C, you can message anyone with the yellow rectangle. This is becuase the clientC's homeServer Server 2 is directly connected to all the other servers in this neighbourhood. 
+```mermaid
+graph LR;
+subgraph connections
+A[ClientA] --> B((Server1));
+C[ClientB] --> B;
+B <--> D((Server2));
+E[ClientC] --> D;
+D <--> F((Server3));
+G[ClientD] --> F;
+H[ClientE] --> F;
+D <--> I((Server4));
+J[ClientF] --> I;
+K[ClientG] --> I;
+end
+```
+If you are ClientER you can message any Client with the yellow rectangle. ClientE can message ClientD becuase they are on the server and can message ClientC, becuase their home servers have a direct connection.
+
+```mermaid
+graph LR;
+
+A[ClientA] --> B((Server1));
+C[ClientB] --> B;
+B <--> D((Server2));
+subgraph connections
+E[ClientC] --> D;
+D <--> F((Server3));
+G[ClientD] --> F;
+H[ClientE] --> F;
+end
+D <--> I((Server4));
+J[ClientF] --> I;
+K[ClientG] --> I;
+
+```
+
 
 The transport layer of this protocol uses Websockets (RFC 6455)
 
