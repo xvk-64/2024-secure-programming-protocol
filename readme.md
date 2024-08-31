@@ -243,7 +243,7 @@ Symmetric encryption is performed with AES in GCM mode.
 - Key length: 32 bytes (128 bits)
 
 ### Order to apply different layers of encrpytion  
-- messege is created
+- message is created
 - add signature by hashing the message and then encrypting the reuslting hash with your private key 
 - encrpyt the message using the symmetric encyption specified above
 - encrypt the the symmetric key used to encrypt the message with the public asymmetric encrption key for the intended recipient
