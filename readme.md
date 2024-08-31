@@ -30,7 +30,9 @@ Server (Owner of the receiver)
 Client (Receiver)
 ```
 
-If a server "owns" a client, that just means that the client is connected to that server (Since clients only connect to one server at a time). The transport layer of this protocol uses Websockets (RFC 6455). You can consider the server you are connected to your homeserver. You can only connect to users connected to your home server or users on servers directly connected your home server.
+If a server "owns" a client, that just means that the client is connected to that server (Since clients only connect to one server at a time). The transport layer of this protocol uses Websockets (RFC 6455). 
+
+You can call the server you are connected to your homeserver. You can only connect to users connected to your home server or users on servers directly connected your home server.
 To this illustrate consider these the diagrams below:
 
 This is an example of a simple neighboorhood, you can be able to commicate with everyone in becuase you are all directly connected.
