@@ -164,7 +164,18 @@ All other servers respond by sending `client_update`
 ### Defintion Tables of Types and Sections and additonal explanations
 
 #### tables
+| Type | Type Meaning |
+|:----:|:------------:| 
+| signed_data|~~ |
+| client_list_request | ~~ |
+| client_update | ~~~ |
+| client_list | ~~~ |
 
+|different types in the data section | meaning |
+| :-----: | :----: |
+| chat | ~~~ |
+| hello | ~~~ |
+| public_chat | ~~~ |
 
 #### Counter
 
