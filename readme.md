@@ -52,14 +52,6 @@ All below messages with `data` follow the below structure:
 `counter` is a monotonically increasing integer. All handlers of a message should track the last counter value sent by a client and reject it if the current value is not greater than the last value. This defeats replay attacks.
 The hash used for `signature` follows the SHA-256 algorithm.
 
-#### Counter
-
-Every message sent by user, tied to their unique key set, has the counter attached to it. The recipient stores the counter value from the latest message sent to them by each user, then when ever a new message received, the counter value stored is compared to the value in the message. If the new value is larger than the old one, the message has not been resent.
-
-The intention behiend the additon of the counter is as a way to defend against replay attacks. A replay attack is a when a copy is taken of a message you receive, and is then resent to you later. For example, Alice sents Bob a message saying "meet me at the park at 2pm" and a malicious attacker takes a copy of that message. A few weeks later the malicious attacker resends Bob the message. Bob goes to the park and finds the malicious attacker there instead of Alice. 
-
-#### Base64 Encoding
-The base64 encoding is applied to data in the different sections of the message to reduce the size of the total message to be sent. 
 
 #### Hello
 This message is sent when first connecting to a server to establish your public key.
@@ -167,6 +159,20 @@ When a server comes online, it will have no initial knowledge of clients connect
 }
 ```
 All other servers respond by sending `client_update`
+
+### Defintion Tables of Types and Sections and additonal explanations
+
+#### tables
+
+
+#### Counter
+
+Every message sent by user, tied to their unique key set, has the counter attached to it. The recipient stores the counter value from the latest message sent to them by each user, then when ever a new message received, the counter value stored is compared to the value in the message. If the new value is larger than the old one, the message has not been resent.
+
+The intention behiend the additon of the counter is as a way to defend against replay attacks. A replay attack is a when a copy is taken of a message you receive, and is then resent to you later. For example, Alice sents Bob a message saying "meet me at the park at 2pm" and a malicious attacker takes a copy of that message. A few weeks later the malicious attacker resends Bob the message. Bob goes to the park and finds the malicious attacker there instead of Alice. 
+
+#### Base64 Encoding
+The base64 encoding is applied to data in the different sections of the message to reduce the size of the total message to be sent. 
 
 ## File transfers
 File transfers are performed over an HTTP[S] API.
