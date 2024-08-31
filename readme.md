@@ -129,6 +129,7 @@ Server response:
     ]
 }
 ```
+Servers assume that a client/user is online as long as they have an open websocket with the homeServer.
 
 ### Sent by server
 #### Client update
