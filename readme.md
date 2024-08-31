@@ -247,15 +247,4 @@ Symmetric encryption is performed with AES in GCM mode.
 - add signature by hashing the message and then encrypting the reuslting hash with your private key 
 - encrpyt the message using the symmetric encyption specified above
 - encrypt the the symmetric key used to encrypt the message with the public asymmetric encrption key for the intended recipient
-- format into the sturcture below 
-
-Message Sturcture
-  ```
-  {
-    "key": (symmetric encryption key secured by asymmetric public key of intended recipient)
-    "message": (message encrypted using symmetric key)
-    "signature:" (hash of message encrypted with private key)
-  }
-  ```
-
 
