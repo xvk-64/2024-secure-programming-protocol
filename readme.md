@@ -30,7 +30,7 @@ Server (Owner of the receiver)
 Client (Receiver)
 ```
 
-If a server "owns" a client, that just means that the client is connected to that server. (Since clients only connect to one server at a time)
+If a server "owns" a client, that just means that the client is connected to that server (Since clients only connect to one server at a time).
 
 The transport layer of this protocol uses Websockets (RFC 6455)
 
