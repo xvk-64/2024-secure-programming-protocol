@@ -1,4 +1,4 @@
-# OLAF/Neighbourhood protocol v0.6
+# OLAF/Neighbourhood protocol v0.7
 By James, Jack, Tom, Mia, Valen, Isabelle, Katie & Cubie
 
 # WARNING: THIS IS NOT A COMPLETE SPECIFICATION YET! DO NOT IMPLEMENT!
@@ -50,7 +50,8 @@ All below messages with `data` follow the below structure:
 }
 ```
 `counter` is a monotonically increasing integer. All handlers of a message should track the last counter value sent by a client and reject it if the current value is not greater than the last value. This defeats replay attacks.
-The hash used for `signature` follows the SHA-256 algorithm.
+The hash used for `signature` follows the SHA-256 algorithm. 
+base64 encoding follows RFC 4648.
 
 
 #### Hello
