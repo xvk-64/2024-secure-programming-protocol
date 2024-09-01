@@ -151,6 +151,7 @@ The `client_update` advertises all currently connected users on a particular ser
 }
 ```
 
+
 #### Client update request
 When a server comes online, it will have no initial knowledge of clients connected elsewhere, so it needs to request a `client_update` from all other servers in the neighbourhood.
 
@@ -166,10 +167,11 @@ All other servers respond by sending `client_update`
 #### tables
 | Type | Type Meaning |
 |:----:|:------------:| 
-| signed_data|~~ |
-| client_list_request | ~~ |
-| client_update | ~~~ |
-| client_list | ~~~ |
+| signed_data| data that has a signature confirming the sender|
+| client_list_request | request sent by client, to get the list of clients online connected to a server |
+| client_update | update send by server letting clients know who has disconnected |
+| client_list | reply by server to client_List_request which contains list of users online |
+| client_update_request | server asking other servers for the client_update |
 
 |different types in the data section | meaning |
 | :-----: | :----: |
@@ -180,7 +182,9 @@ All other servers respond by sending `client_update`
 #### Counter
 Every message sent by user, tied to their unique key set, has the counter attached to it. The recipient stores the counter value from the latest message sent to them by each user, then when ever a new message received, the counter value stored is compared to the value in the message. If the new value is larger than the old one, the message has not been resent. The starting value of the count will be 0.
 
-The intention behiend the additon of the counter is as a way to defend against replay attacks. A replay attack is a when a copy is taken of a message you receive, and is then resent to you later. For example, Alice sents Bob a message saying "meet me at the park at 2pm" and a malicious attacker takes a copy of that message. A few weeks later the malicious attacker resends Bob the message. Bob goes to the park and finds the malicious attacker there instead of Alice. 
+The intention behiend the additon of the counter is as a way to defend against replay attacks. A replay attack is a when a copy is taken of a message you receive, and is then resent to you later. For example, Alice sents Bob a message saying "meet me at the park at 2pm" and a malicious attacker takes a copy of that message. A few weeks later the malicious attacker resends Bob the message. Bob goes to the park and finds the malicious attacker there instead of Alice.
+
+- how the counter is combined in with the message
 
 #### Base64 Encoding
 - add base 64 type e.g. (0-9, a-z, A-Z + 3 other characters)
