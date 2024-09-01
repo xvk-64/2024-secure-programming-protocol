@@ -1,4 +1,4 @@
-# OLAF/Neighbourhood protocol v0.6
+# OLAF/Neighbourhood protocol v0.7
 By James, Jack, Tom, Mia, Valen, Isabelle, Katie & Cubie
 
 # WARNING: THIS IS NOT A COMPLETE SPECIFICATION YET! DO NOT IMPLEMENT!
@@ -50,7 +50,9 @@ All below messages with `data` follow the below structure:
 }
 ```
 `counter` is a monotonically increasing integer. All handlers of a message should track the last counter value sent by a client and reject it if the current value is not greater than the last value. This defeats replay attacks.
-The hash used for `signature` follows the SHA-256 algorithm.
+The hash used for `signature` follows the SHA-256 algorithm. 
+base64 encoding follows RFC 4648.
+
 
 #### Hello
 This message is sent when first connecting to a server to establish your public key.
@@ -128,6 +130,7 @@ Server response:
     ]
 }
 ```
+Servers assume that a client/user is online as long as they have an open websocket with the homeServer.
 
 ### Sent by server
 #### Client update
@@ -149,6 +152,7 @@ The `client_update` advertises all currently connected users on a particular ser
 }
 ```
 
+
 #### Client update request
 When a server comes online, it will have no initial knowledge of clients connected elsewhere, so it needs to request a `client_update` from all other servers in the neighbourhood.
 
@@ -158,6 +162,28 @@ When a server comes online, it will have no initial knowledge of clients connect
 }
 ```
 All other servers respond by sending `client_update`
+
+### Defintion Tables of Types and Sections and additonal explanations
+
+#### tables
+| Type | Type Meaning |
+|:----:|:------------:| 
+| signed_data| data that has a signature confirming the sender|
+| client_list_request | request sent by client, to get the list of clients online connected to a server |
+| client_update | update send by server letting clients know who has disconnected |
+| client_list | reply by server to client_List_request which contains list of users online |
+| client_update_request | server asking other servers for the client_update |
+
+|different types in the data section | meaning |
+| :-----: | :----: |
+| chat | message that has chat message data in it |
+| hello | message sent when client connects to a server |
+| public_chat | message sent to every one connected in the neighbourhood and homeServer not encrypted |
+
+#### Counter
+Every message sent by user, tied to their unique key set, has the counter attached to it. The recipient stores the counter value from the latest message sent to them by each user, then when ever a new message received, the counter value stored is compared to the value in the message. If the new value is larger than the old one, the message has not been resent. The starting value of the count will be 0.
+
+The intention behiend the additon of the counter is as a way to defend against replay attacks. A replay attack is a when a copy is taken of a message you receive, and is then resent to you later. For example, Alice sents Bob a message saying "meet me at the park at 2pm" and a malicious attacker takes a copy of that message. A few weeks later the malicious attacker resends Bob the message. Bob goes to the park and finds the malicious attacker there instead of Alice.
 
 ## File transfers
 File transfers are performed over an HTTP[S] API.
