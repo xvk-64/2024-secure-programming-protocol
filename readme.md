@@ -30,9 +30,9 @@ Server (Owner of the receiver)
 Client (Receiver)
 ```
 
-If a server "owns" a client, that just means that the client is connected to that server. (Since clients only connect to one server at a time)
+If a server "owns" a client, that just means that the client is connected to that server (Since clients only connect to one server at a time). The transport layer of this protocol uses Websockets (RFC 6455). 
 
-The transport layer of this protocol uses Websockets (RFC 6455)
+You can call the server you are connected to your homeserver. You can only connect to users connected to your home server or users on servers directly connected your home server. Refer to the additional file network topology examples, to see examples of neighbourhoods and other potential network arrangments. 
 
 ## Protocol defined messages
 All messages are sent as UTF-8 JSON objects. 
