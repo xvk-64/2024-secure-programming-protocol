@@ -1,4 +1,4 @@
-# OLAF/Neighbourhood protocol v0.7
+# OLAF/Neighbourhood protocol v0.8
 By James, Jack, Tom, Mia, Valen, Isabelle, Katie & Cubie
 
 # WARNING: THIS IS NOT A COMPLETE SPECIFICATION YET! DO NOT IMPLEMENT!
@@ -162,6 +162,35 @@ When a server comes online, it will have no initial knowledge of clients connect
 }
 ```
 All other servers respond by sending `client_update`
+
+#### Server Hello 
+When a server added another server's IP to its list of connected servers. It sends this message to that server. To Let them know that this server is connecting to them. 
+```JSON
+{
+"type": "server_hello"
+   "data" {
+        "type": "server_to_server_message"
+        "sender": "<server IP connecting>"
+    }
+}
+```
+This lets server know who is connecting to them. Allows the server to add the other server it list of connected servers, allowing it to intiate the connection. 
+
+#### Server Connection Update
+When a server connects to a new server, it sends this message to all the other servers it is directly. Letting them know the ip address of the new server they are connecting to.
+This helps maintain neighbourhoods, by making it easier for servers have the right direct connections. 
+
+```JSON
+{
+"type": "server_connections_update"
+  "data" {
+      "type": "server_to_server_message"
+      "sender": "<IP of server that is already connected>"
+      "message": "<IP of new server, the server is connecting to>"
+    }
+}
+```
+
 
 ### Defintion Tables of Types and Sections and additonal explanations
 
