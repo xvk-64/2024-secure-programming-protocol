@@ -174,7 +174,6 @@ When a server added another server's IP to its list of connected servers. It sen
     }
 }
 ```
-This lets server know who is connecting to them. Allows the server to add the other server it list of connected servers, allowing it to intiate the connection. 
 
 
 ### Defintion Tables of Types and Sections and additonal explanations
