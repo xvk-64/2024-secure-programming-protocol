@@ -1,7 +1,5 @@
-# OLAF/Neighbourhood protocol v0.7
+# OLAF/Neighbourhood protocol v1.0
 By James, Jack, Tom, Mia, Valen, Isabelle, Katie & Cubie
-
-# WARNING: THIS IS NOT A COMPLETE SPECIFICATION YET! DO NOT IMPLEMENT!
 
 ## Definitions
 - **User** A user has a key pair. Each user connects to one server at a time.
