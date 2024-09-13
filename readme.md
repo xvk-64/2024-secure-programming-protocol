@@ -163,15 +163,14 @@ When a server comes online, it will have no initial knowledge of clients connect
 ```
 All other servers respond by sending `client_update`
 
-#### Server Hello 
-When a server added another server's IP to its list of connected servers. It sends this message to that server. To Let them know that this server is connecting to them. 
+#### Server Hello
+When a server establishes a connection with another server in the neighbourhood, it sends this messsage. It doesn't send a public key, as this should be shared prior when agreeing on a neighbourhood, and can be used to verify the identity of the server.
 ```JSON
 {
-"type": "server_hello"
    "data" {
-        "type": "server_to_server_message"
+        "type": "server_hello"
         "sender": "<server IP connecting>"
-    }
+   }
 }
 ```
 
