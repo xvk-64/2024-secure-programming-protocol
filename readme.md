@@ -1,4 +1,4 @@
-# OLAF/Neighbourhood protocol v1.0
+# OLAF/Neighbourhood protocol v1.1
 By James, Jack, Tom, Mia, Valen, Isabelle, Katie & Cubie
 
 ## Definitions
@@ -28,9 +28,9 @@ Server (Owner of the receiver)
 Client (Receiver)
 ```
 
-If a server "owns" a client, that just means that the client is connected to that server (Since clients only connect to one server at a time). The transport layer of this protocol uses Websockets (RFC 6455). 
+If a server "owns" a client, that just means that the client is connected to that server (Since clients only connect to one server at a time). The transport layer of this protocol uses WebSockets (RFC 6455). 
 
-You can call the server you are connected to your homeserver. You can only connect to users connected to your home server or users on servers directly connected your home server. Refer to the additional file network topology examples, to see examples of neighbourhoods and other potential network arrangments. 
+You can call the server you are connected to your home server. You can only connect to users connected to your home server or users on servers directly connected your home server. Refer to the additional file network topology examples, to see examples of neighbourhoods and other potential network arrangements. 
 
 ## Protocol defined messages
 All messages are sent as UTF-8 JSON objects. 
@@ -128,7 +128,7 @@ Server response:
     ]
 }
 ```
-Servers assume that a client/user is online as long as they have an open websocket with the homeServer.
+Servers assume that a client/user is online as long as they have an open WebSocket with the home server.
 
 ### Sent by server
 #### Client update
@@ -161,7 +161,19 @@ When a server comes online, it will have no initial knowledge of clients connect
 ```
 All other servers respond by sending `client_update`
 
-### Defintion Tables of Types and Sections and additonal explanations
+#### Server Hello
+When a server establishes a connection with another server in the neighbourhood, it sends this messsage. It doesn't send a public key, as this should be shared prior when agreeing on a neighbourhood, and can be used to verify the identity of the server.
+```JSON
+{
+   "data" {
+        "type": "server_hello"
+        "sender": "<server IP connecting>"
+   }
+}
+```
+
+
+### Definition Tables of Types and Sections and additional explanations
 
 #### tables
 | Type | Type Meaning |
@@ -181,13 +193,13 @@ All other servers respond by sending `client_update`
 #### Counter
 Every message sent by user, tied to their unique key set, has the counter attached to it. The recipient stores the counter value from the latest message sent to them by each user, then when ever a new message received, the counter value stored is compared to the value in the message. If the new value is larger than the old one, the message has not been resent. The starting value of the count will be 0.
 
-The intention behiend the additon of the counter is as a way to defend against replay attacks. A replay attack is a when a copy is taken of a message you receive, and is then resent to you later. For example, Alice sents Bob a message saying "meet me at the park at 2pm" and a malicious attacker takes a copy of that message. A few weeks later the malicious attacker resends Bob the message. Bob goes to the park and finds the malicious attacker there instead of Alice.
+The intention behind the addition of the counter is as a way to defend against replay attacks. A replay attack is a when a copy is taken of a message you receive, and is then resent to you later. For example, Alice sends Bob a message saying "meet me at the park at 2pm" and a malicious attacker takes a copy of that message. A few weeks later the malicious attacker resends Bob the message. Bob goes to the park and finds the malicious attacker there instead of Alice.
 
 ## File transfers
 File transfers are performed over an HTTP[S] API.
 
 ### Upload file
-Uplaod a file in the same format as an HTTP form.
+Upload a file in the same format as an HTTP form.
 ```
 "<server>/api/upload" {
     METHOD: POST
@@ -219,7 +231,7 @@ The server will respond with the file data. File uploads and downloads are not a
 When receiving a message from the server, the client first needs to validate the signature against the public key of the sender.
 
 ### How to send a message?
-There are two things to know about your recipient: their server address and public key. use these to fill out a `"chat"` message and your server will forward it to the correct destination.
+There are two things to know about your recipient: their server address and public key. Use these to fill out a `"chat"` message and your server will forward it to the correct destination.
 
 ### How do you know when you receive a message for you?
 When receiving a chat message, you should attempt to decrypt the `symm_key` field, then use that to decrypt the `chat` field. If the result follows the format, then the message is directed to you. You can also check for your public key in the `participants` list.
@@ -230,7 +242,7 @@ A server is primarily a relay for messages. It does only a minimal amount of mes
 
 It is a server's responsibility to not forward garbage, so it should check all messages to ensure they follow a standard message format as above. This includes incoming (from other servers) and outgoing (from clients) messages.
 
-A server is located by an address which opionally includes a port. The default port is the same as http[s]. 80 for non-TLS and 443 for TLS
+A server is located by an address which optionally includes a port. The default port is the same as http[s]. 80 for non-TLS and 443 for TLS
 - 10.0.0.27:8001
 - my.awesomeserver.net
 - localhost:666
@@ -246,7 +258,7 @@ If not all servers agree on who is in the neighbourhood, the neighbourhood enter
 
 
 ## Underlying technologies
-The transport layer uses Websockets, meaning the server will need to be HTTP-capable. There are various websocket libraries for the popular programming languages that will handle this.
+The transport layer uses WebSockets, meaning the server will need to be HTTP-capable. There are various WebSocket libraries for the popular programming languages that will handle this.
 
 ## Encryption
 ### Asymmetric Encryption
@@ -265,10 +277,10 @@ Symmetric encryption is performed with AES in GCM mode.
 - Additional/associated data = not used (empty).
 - Key length: 32 bytes (128 bits)
 
-### Order to apply different layers of encrpytion  
+### Order to apply different layers of encryption
 - message is created
 - create a signature by applying the signature scheme RSA-PSS 
-- encrpyt the message using the symmetric encyption specified above
-- encrypt the symmetric key used to encrypt the message with the public asymmetric encrption key of the intended recipient
-- format these to be sent as shown in proctocol defined messages
+- encrypt the message using the symmetric encryption specified above
+- encrypt the symmetric key used to encrypt the message with the public asymmetric encryption key of the intended recipient
+- format these to be sent as shown in protocol defined messages
 
