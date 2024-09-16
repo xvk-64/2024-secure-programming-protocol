@@ -189,6 +189,7 @@ When a server establishes a connection with another server in the neighbourhood,
 | chat | message that has chat message data in it |
 | hello | message sent when client connects to a server |
 | public_chat | message sent to every one connected in the neighbourhood and homeServer not encrypted |
+| server_hello | message sent between server-to-server connections |
 
 #### Counter
 Every message sent by user, tied to their unique key set, has the counter attached to it. The recipient stores the counter value from the latest message sent to them by each user, then when ever a new message received, the counter value stored is compared to the value in the message. If the new value is larger than the old one, the message has not been resent. The starting value of the count will be 0.
