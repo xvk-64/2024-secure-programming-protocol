@@ -1,4 +1,4 @@
-# OLAF/Neighbourhood protocol v1.1
+# OLAF/Neighbourhood protocol v1.1.1
 By James, Jack, Tom, Mia, Valen, Isabelle, Katie & Cubie
 
 ## Definitions
@@ -267,7 +267,7 @@ Asymmetric encryption and decryption is performed with RSA.
 - Key size/Modulus length (n) = 2048 bits
 - Public exponent (e) = 65537
 - Padding scheme: OAEP with SHA-256 digest/hash function
-- Public keys are exported in PEM encoding with PKCS8 format.
+- Public keys are exported in PEM encoding with SPKI format.
 
 Signing and verification also uses RSA. It shares the same keys as encryption/decryption.
 - Padding scheme: PSS with SHA-256 digest/hash function
