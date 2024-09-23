@@ -162,11 +162,11 @@ When a server comes online, it will have no initial knowledge of clients connect
 All other servers respond by sending `client_update`
 
 #### Server Hello
-When a server establishes a connection with another server in the neighbourhood, it sends this messsage. It doesn't send a public key, as this should be shared prior when agreeing on a neighbourhood, and can be used to verify the identity of the server.
+When a server establishes a connection with another server in the neighbourhood, it sends this message. It doesn't send a public key, as this should be shared prior when agreeing on a neighbourhood, and can be used to verify the identity of the server.
 ```JSON
 {
-   "data" {
-        "type": "server_hello"
+   "data": {
+        "type": "server_hello",
         "sender": "<server IP connecting>"
    }
 }
