@@ -1,11 +1,11 @@
-# OLAF/Neighbourhood protocol v1.1.1
+# OLAF/Neighbourhood protocol v1.1.2
 By James, Jack, Tom, Mia, Valen, Isabelle, Katie & Cubie
 
 ## Definitions
 - **User** A user has a key pair. Each user connects to one server at a time.
 - **Server** A server receives messages from clients and relays them towards the destination.
 - **Neighbourhood** Servers organise themselves in a meshed network called a neighborhood. Each server in a neighbourhood is aware of and connects to all other servers
-- **Fingerprint** A fingerprint is the unique identification of a user. It is obtained by taking SHA-256(exported RSA public key)
+- **Fingerprint** A fingerprint is the unique identification of a user. It is a string obtained by taking Base64Encode(SHA-256(exported RSA public key)).
 
 ## Main design principles
 This protocol specification was obtained by taking parts of the original OLAF protocol combined with the neighbourhood protocol. The network structure resembles the original neighbourhood, while the messages and roles of the servers are similar to OLAF.
@@ -44,7 +44,7 @@ All below messages with `data` follow the below structure:
     "type": "signed_data",
     "data": {  },
     "counter": 12345,
-    "signature": "<Base64 signature of data + counter>"
+    "signature": "<Base64 encoded (signature of (data JSON concatenated with counter))>"
 }
 ```
 `counter` is a monotonically increasing integer. All handlers of a message should track the last counter value sent by a client and reject it if the current value is not greater than the last value. This defeats replay attacks.
@@ -58,13 +58,13 @@ This message is sent when first connecting to a server to establish your public 
 {
     "data": {
         "type": "hello",
-        "public_key": "<Exported RSA public key>"
+        "public_key": "<Exported PEM of RSA public key>"
     }
 }
 ```
 
 ### Chat
-Sent when a user wants to send a chat message to another user[s]. Chat messages are end-to-end encrypted.
+Sent when a user wants to send a chat message to another user[s]. Chat messages are end-to-end encrypted. Only one AES key is generated and is sent to all recipients.
 
 ```JSON
 {
@@ -73,18 +73,19 @@ Sent when a user wants to send a chat message to another user[s]. Chat messages 
         "destination_servers": [
             "<Address of each recipient's destination server>",
         ],
-        "iv": "<Base64 encoded AES initialisation vector>",
+        "iv": "<Base64 encoded (AES initialisation vector)>",
         "symm_keys": [
-            "<Base64 encoded AES key, encrypted with each recipient's public RSA key>",
+            "<Base64 encoded (AES key encrypted with recipient's public RSA key)>",
         ],
-        "chat": "<Base64 encoded AES encrypted segment>"
+        "chat": "<Base64 encoded (AES ciphertext segment)>"
     }
 }
 
 {
     "chat": {
         "participants": [
-            "<Base64 encoded list of fingerprints of participants, starting with sender>",
+            "<Fingerprint of sender comes first>",
+            "<Fingerprints of recipients>",
         ],
         "message": "<Plaintext message>"
     }
@@ -100,7 +101,7 @@ Public chats are not encrypted at all and are broadcasted as plaintext.
 {
     "data": {
         "type": "public_chat",
-        "sender": "<Base64 encoded fingerprint of sender>",
+        "sender": "<Fingerprint of sender>",
         "message": "<Plaintext message>"
     }
 }
@@ -122,7 +123,7 @@ Server response:
         {
             "address": "<Address of server>",
             "clients": [
-                "<Exported RSA public key of client>",
+                "<PEM of exported RSA public key of client>",
             ]
         },
     ]
@@ -145,7 +146,7 @@ The `client_update` advertises all currently connected users on a particular ser
 {
     "type": "client_update",
     "clients": [
-        "<Exported RSA public key of client>",
+        "<PEM of exported RSA public key of client>",
     ]
 }
 ```
@@ -277,6 +278,7 @@ Symmetric encryption is performed with AES in GCM mode.
 - Initialisation vector (IV) = 16 bytes (Must be randomly generated)
 - Additional/associated data = not used (empty).
 - Key length: 32 bytes (128 bits)
+- Authentication tag: 32 bytes (128 bits). The authentication tag takes up the final 128 bits of the ciphertext.
 
 ### Order to apply different layers of encryption
 - message is created
