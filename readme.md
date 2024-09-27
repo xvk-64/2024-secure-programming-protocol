@@ -198,7 +198,8 @@ Every message sent by user, tied to their unique key set, has the counter attach
 The intention behind the addition of the counter is as a way to defend against replay attacks. A replay attack is a when a copy is taken of a message you receive, and is then resent to you later. For example, Alice sends Bob a message saying "meet me at the park at 2pm" and a malicious attacker takes a copy of that message. A few weeks later the malicious attacker resends Bob the message. Bob goes to the park and finds the malicious attacker there instead of Alice.
 
 ## File transfers
-File transfers are performed over an HTTP[S] API. The HTTP[s] server end point needs to be hosted at the same address as the WebsSocket server, but it cab optionally use different port.
+File transfers are performed over an HTTP[S] API. The HTTP[s] server end point needs to be hosted at the same address as the WebsSocket server, but it can optionally use different port.
+
 ### Upload file
 Upload a file in the same format as an HTTP form.
 ```
