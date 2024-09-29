@@ -1,4 +1,4 @@
-# OLAF/Neighbourhood protocol v1.1.2
+# OLAF/Neighbourhood protocol v1.1.3
 By James, Jack, Tom, Mia, Valen, Isabelle, Katie & Cubie
 
 ## Definitions
@@ -277,8 +277,8 @@ Signing and verification also uses RSA. It shares the same keys as encryption/de
 Symmetric encryption is performed with AES in GCM mode.
 - Initialisation vector (IV) = 16 bytes (Must be randomly generated)
 - Additional/associated data = not used (empty).
-- Key length: 32 bytes (128 bits)
-- Authentication tag: 32 bytes (128 bits). The authentication tag takes up the final 128 bits of the ciphertext.
+- Key length: 16 bytes (128 bits)
+- Authentication tag: 16 bytes (128 bits). The authentication tag takes up the final 128 bits of the ciphertext.
 
 ### Order to apply different layers of encryption
 - message is created
