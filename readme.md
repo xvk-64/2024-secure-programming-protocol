@@ -1,4 +1,4 @@
-# OLAF/Neighbourhood protocol v1.2
+# OLAF/Neighbourhood protocol v1.1.3
 By James, Jack, Tom, Mia, Valen, Isabelle, Katie & Cubie
 
 ## Definitions
@@ -42,16 +42,14 @@ All below messages with `data` follow the below structure:
 ```JSON
 {
     "type": "signed_data",
-    "data": "<JSON Object, encoded as a string>",
+    "data": {  },
     "counter": 12345,
     "signature": "<Base64 encoded (signature of (data JSON concatenated with counter))>"
 }
 ```
 `counter` is a monotonically increasing integer. All handlers of a message should track the last counter value sent by a client and reject it if the current value is not greater than the last value. This defeats replay attacks.
-The hash used for `signature` follows the SHA-256 algorithm.
+The hash used for `signature` follows the SHA-256 algorithm. 
 base64 encoding follows RFC 4648.
-
-Data being represented as a string is to ensure consistency when verifying message signatures. Throughout this document, it will be represented as a regular JSON object.
 
 
 #### Hello
@@ -272,15 +270,20 @@ Asymmetric encryption and decryption is performed with RSA.
 - Padding scheme: OAEP with SHA-256 digest/hash function
 - Public keys are exported in PEM encoding with SPKI format.
 
-### Message Signing
 Signing and verification also uses RSA. It shares the same keys as encryption/decryption.
 - Padding scheme: PSS with SHA-256 digest/hash function
 - Salt length: 32 bytes
 
-### Symmetric Encryption
 Symmetric encryption is performed with AES in GCM mode.
 - Initialisation vector (IV) = 16 bytes (Must be randomly generated)
 - Additional/associated data = not used (empty).
 - Key length: 16 bytes (128 bits)
 - Authentication tag: 16 bytes (128 bits). The authentication tag takes up the final 128 bits of the ciphertext.
+
+### Order to apply different layers of encryption
+- message is created
+- create a signature by applying the signature scheme RSA-PSS 
+- encrypt the message using the symmetric encryption specified above
+- encrypt the symmetric key used to encrypt the message with the public asymmetric encryption key of the intended recipient
+- format these to be sent as shown in protocol defined messages
 
