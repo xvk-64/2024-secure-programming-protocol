@@ -51,7 +51,7 @@ All below messages with `data` follow the below structure:
 The hash used for `signature` follows the SHA-256 algorithm.
 base64 encoding follows RFC 4648.
 
-Data being represented as a string is to ensure consistency when verifying message signatures. Throughout this documented, it will be represented as a regular JSON object.
+Data being represented as a string is to ensure consistency when verifying message signatures. Throughout this document, it will be represented as a regular JSON object.
 
 
 #### Hello
