@@ -272,20 +272,15 @@ Asymmetric encryption and decryption is performed with RSA.
 - Padding scheme: OAEP with SHA-256 digest/hash function
 - Public keys are exported in PEM encoding with SPKI format.
 
+### Message Signing
 Signing and verification also uses RSA. It shares the same keys as encryption/decryption.
 - Padding scheme: PSS with SHA-256 digest/hash function
 - Salt length: 32 bytes
 
+### Symmetric Encryption
 Symmetric encryption is performed with AES in GCM mode.
 - Initialisation vector (IV) = 16 bytes (Must be randomly generated)
 - Additional/associated data = not used (empty).
 - Key length: 16 bytes (128 bits)
 - Authentication tag: 16 bytes (128 bits). The authentication tag takes up the final 128 bits of the ciphertext.
-
-### Order to apply different layers of encryption
-- message is created
-- create a signature by applying the signature scheme RSA-PSS 
-- encrypt the message using the symmetric encryption specified above
-- encrypt the symmetric key used to encrypt the message with the public asymmetric encryption key of the intended recipient
-- format these to be sent as shown in protocol defined messages
 
