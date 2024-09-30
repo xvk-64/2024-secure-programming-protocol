@@ -1,4 +1,4 @@
-# OLAF/Neighbourhood protocol v1.1.3
+# OLAF/Neighbourhood protocol v1.2
 By James, Jack, Tom, Mia, Valen, Isabelle, Katie & Cubie
 
 ## Definitions
@@ -42,14 +42,16 @@ All below messages with `data` follow the below structure:
 ```JSON
 {
     "type": "signed_data",
-    "data": {  },
+    "data": "<JSON Object, encoded as a string>",
     "counter": 12345,
     "signature": "<Base64 encoded (signature of (data JSON concatenated with counter))>"
 }
 ```
 `counter` is a monotonically increasing integer. All handlers of a message should track the last counter value sent by a client and reject it if the current value is not greater than the last value. This defeats replay attacks.
-The hash used for `signature` follows the SHA-256 algorithm. 
+The hash used for `signature` follows the SHA-256 algorithm.
 base64 encoding follows RFC 4648.
+
+Data being represented as a string is to ensure consistency when verifying message signatures. Throughout this documented, it will be represented as a regular JSON object.
 
 
 #### Hello
