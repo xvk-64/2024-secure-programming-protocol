@@ -5,7 +5,15 @@ By James, Jack, Tom, Mia, Valen, Isabelle, Katie & Cubie
 - **User** A user has a key pair. Each user connects to one server at a time.
 - **Server** A server receives messages from clients and relays them towards the destination.
 - **Neighbourhood** Servers organise themselves in a meshed network called a neighborhood. Each server in a neighbourhood is aware of and connects to all other servers
-- **Fingerprint** A fingerprint is the unique identification of a user. It is a string obtained by taking Base64Encode(SHA-256(exported RSA public key)).
+- **Fingerprint** A fingerprint is the unique identification of a user.
+
+### Fingerprint Derivation
+A fingerprint is derived from the client's public key. There needs to be a standardised way to consistently get the same fingerprint from multiple different clients/servers for the same key.
+
+1. Export the public key in SPKI scheme in the PEM format
+    - When calculating a fingerprint, there must NOT be any whitespace characters EXCEPT for the required spaces and newlines in the BEGIN and END lines of the PEM.
+2. Perform a SHA-256 hash on the resulting string
+3. Encode the resulting binary data into Base64.
 
 ## Main design principles
 This protocol specification was obtained by taking parts of the original OLAF protocol combined with the neighbourhood protocol. The network structure resembles the original neighbourhood, while the messages and roles of the servers are similar to OLAF.
