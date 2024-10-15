@@ -15,6 +15,14 @@ A fingerprint is derived from the client's public key. There needs to be a stand
 2. Perform a SHA-256 hash on the resulting string
 3. Encode the resulting binary data into Base64.
 
+```
+Example of what the PEM should look like
+
+-----BEGIN PUBLIC KEY----
+<Base64 SPKI on one line only with no spaces...>
+-----END PUBLIC KEY-----
+```
+
 ## Main design principles
 This protocol specification was obtained by taking parts of the original OLAF protocol combined with the neighbourhood protocol. The network structure resembles the original neighbourhood, while the messages and roles of the servers are similar to OLAF.
 
